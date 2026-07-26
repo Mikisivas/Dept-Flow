@@ -1,42 +1,61 @@
 # Color and type system
 
-Departmental colors: **orange, white, black.** This file turns those three into a
-working, accessible system.
+Departmental colors: **orange, white, black** — taken from the SAMACOSS crest
+(Student Association of Mathematics, Computer Science & Statistics). This file turns
+those three into a working, accessible system.
+
+## The palette is derived from the logo
+
+The crest's orange is a **golden orange, hue ≈32°** — noticeably warmer and lighter
+than a generic "web orange." The whole UI scale is generated from that hue so the
+interface and the logo read as one system.
+
+> **Confirm the exact value before launch.** `#F0952B` is a close visual read of the
+> supplied crest, not a sample from the source file. Open the original in any editor,
+> eyedrop the shield fill, and if it differs, update `--brand` here and regenerate
+> the scale — the ratios below shift with it.
+
+**The logo already tells us the correct text treatment.** "SAMACOSS" is set in
+**black on orange**, not white. Follow that: orange is a *fill* that carries black
+text. This is not a compromise — it measures better than the alternative.
 
 ## Verified contrast ratios
 
-Computed with the WCAG 2.1 relative-luminance formula. AA requires **4.5:1** for
-normal text, **3:1** for large text (≥18.66px bold / ≥24px) and for UI component
-boundaries.
+WCAG 2.1 relative-luminance formula. AA requires **4.5:1** for normal text, **3:1**
+for large text (≥18.66px bold / ≥24px) and UI component boundaries.
 
 | Pair | Ratio | Verdict |
 |---|---|---|
-| Signal Orange `#EA580C` on white | **3.56:1** | ✗ fails normal text — large text / UI only |
-| Black `#0A0A0A` on Signal Orange | **5.56:1** | ✓ AA — *this is how to use brand orange* |
-| White on Deep Orange `#C2410C` | **5.18:1** | ✓ AA — primary button |
-| Deep Orange `#C2410C` on white | **5.18:1** | ✓ AA — orange text |
+| **Black `#0A0A0A` on Brand Orange** | **8.52:1** | ✓ AAA — *the primary pattern* |
+| Brand Orange `#F0952B` on white | **2.32:1** | ✗ fails — never as text |
+| White on Brand Orange | **2.32:1** | ✗ fails — never do this |
+| Black on Hover `#D67A0F` | **6.27:1** | ✓ AA |
+| Black on Pressed `#BF6D0D` | **5.10:1** | ✓ AA |
+| Orange Text `#A75F0C` on white | **4.90:1** | ✓ AA — the only orange safe as text |
 | Ink `#0A0A0A` on white | **19.80:1** | ✓ AAA |
 | Slate `#525252` on white | **7.81:1** | ✓ AAA — secondary text |
 | Muted `#737373` on white | **4.74:1** | ✓ AA — tertiary text, captions |
 | White on Green `#15803D` | **5.02:1** | ✓ AA |
 | White on Red `#B91C1C` | **6.47:1** | ✓ AA |
 | White on Blue `#1D4ED8` | **6.70:1** | ✓ AA |
-| Bright Orange `#FB923C` on Ink | **8.75:1** | ✓ AAA — dark mode brand |
+| Brand Orange on Ink (dark mode) | **8.52:1** | ✓ AAA — works unchanged on dark |
 
-**The trap:** the natural instinct is to make the brand orange the button color with
-white text. That combination is ~2.6:1 and badly fails. Use Deep Orange `#C2410C`
-for any orange surface that carries white text.
+**The trap:** the instinct is a white-text-on-orange button. At **2.32:1** that is
+one of the worst contrast failures possible and would be caught immediately. Orange
+surfaces carry **black** text. If orange must be *text* on white, it has to darken
+all the way to `#A75F0C`.
 
 ## Tokens
 
 ```css
 :root {
-  /* Brand */
-  --brand:            #EA580C;  /* Signal Orange — fills, motif, charts. BLACK text on it. */
-  --brand-strong:     #C2410C;  /* Deep Orange — orange text on white; white-text buttons */
-  --brand-deep:       #9A3412;  /* hover/pressed for brand-strong */
-  --brand-tint:       #FFF7ED;  /* barely-orange surface for grouped panels */
-  --brand-tint-2:     #FFEDD5;  /* selected rows, subtle emphasis */
+  /* Brand — hue 32°, generated from the SAMACOSS crest */
+  --brand:            #F0952B;  /* crest orange — fills, motif, primary button. BLACK text. */
+  --brand-hover:      #D67A0F;  /* button hover (black text: 6.27:1) */
+  --brand-pressed:    #BF6D0D;  /* button pressed (black text: 5.10:1) */
+  --brand-text:       #A75F0C;  /* the ONLY orange usable as text on white (4.90:1) */
+  --brand-tint:       #FDF3E7;  /* barely-orange surface for grouped panels */
+  --brand-tint-2:     #FCE7CF;  /* selected rows, subtle emphasis */
 
   /* Neutrals */
   --ink:              #0A0A0A;  /* primary text */
@@ -58,8 +77,8 @@ for any orange surface that carries white text.
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --brand:          #FB923C;  /* lighter orange reads on dark; 8.75:1 on ink */
-    --brand-strong:   #FDBA74;
+    --brand:          #F0952B;  /* crest orange is already 8.52:1 on ink — keep it */
+    --brand-text:     #F2A040;  /* lighten only the text variant for dark surfaces */
     --ink:            #FAFAFA;
     --slate:          #A3A3A3;
     --muted:          #737373;
@@ -89,6 +108,40 @@ Once the student clears, the same cells fill solid orange and the border goes so
 That transition — hollow to filled — is the most important visual moment in the
 product, because it is the payoff for paying dues. Design it deliberately (a brief
 fill animation is justified here; honor `prefers-reduced-motion`).
+
+## Logo usage and required assets
+
+The SAMACOSS crest is the identity mark: an orange shield holding a monitor-and-tower
+glyph, the SAMACOSS wordmark, and a book, wrapped in two white ribbon banners
+("Student Association of Mathematics Computer Science & Statistics" / "Towards
+Advanced Technology").
+
+**It is a detailed crest, and detail does not survive small sizes.** The ribbon
+outlines are hairlines and the banner text is tiny; below roughly 200px it turns to
+mud, and at favicon size (16–32px) it is unreadable noise. So the crest is used at
+size, and a simplified mark is used everywhere small.
+
+| Asset | Source | Where used |
+|---|---|---|
+| **Full crest** | supplied logo | login/landing screen, printed reports, About |
+| **App mark** | shield silhouette + monitor glyph only — **no ribbons, no banner text** | app header, favicon, PWA icon, loading screen |
+| **Monochrome mark** | app mark, single-color | dark mode, watermarks, anywhere over orange |
+
+Required files (all derived from the one crest):
+- `favicon.ico` — 32×32, app mark only
+- `icon-192.png`, `icon-512.png` — PWA/home-screen, app mark on the crest orange
+- `apple-touch-icon.png` — 180×180
+- `logo-full.svg` — the crest, for the login screen
+- `logo-mark.svg` — the simplified app mark
+
+**Ask for the source file.** The crest as supplied is a raster on an opaque white
+background. Get the original **SVG or transparent PNG** from whoever produced it —
+a white box behind the logo will be visible against `--brand-tint` panels and will
+look broken in dark mode. If only a raster exists, the mark should be redrawn as SVG
+rather than scaled up.
+
+**Never** recolor the crest, stretch it, place the full crest on an orange fill (the
+shield disappears), or add effects to it.
 
 ## Using orange without drowning in it
 

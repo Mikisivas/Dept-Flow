@@ -43,16 +43,19 @@ Add only what a screen needs. Don't bulk-install the catalog.
 ```css
 /* globals.css */
 :root {
-  --primary:              var(--brand-strong);  /* #C2410C — white text passes */
-  --primary-foreground:   #FFFFFF;
-  --accent:               var(--brand);         /* #EA580C — black text only */
+  --primary:              var(--brand);        /* #F0952B — the crest orange */
+  --primary-foreground:   var(--ink);          /* BLACK on orange — 8.52:1 */
+  --accent:               var(--brand-tint-2);
   --accent-foreground:    var(--ink);
   --destructive:          var(--danger);
+  --destructive-foreground: #FFFFFF;
   --muted-foreground:     var(--muted);
   --border:               var(--line);
 }
 ```
 
-Note `--primary` maps to **Deep Orange**, not Signal Orange — because shadcn's
-default button puts `--primary-foreground` (white) on `--primary`, and white on
-`#EA580C` fails contrast. This mapping is what keeps the default button accessible.
+**`--primary-foreground` must be black, not white.** shadcn's default button puts
+`--primary-foreground` on `--primary`; leaving that as white would render white text
+on `#F0952B` at **2.32:1** — a severe failure. Black on the crest orange is 8.52:1,
+and it matches how the logo itself sets the SAMACOSS wordmark. Override this token
+during `init` and verify the first button you build.

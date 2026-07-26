@@ -96,7 +96,8 @@ window, and legally-relevant state (attendance, payment, eligibility).
 ## Dark mode
 - `color-scheme: dark` on `<html>`; `<meta name="theme-color">` matches surface.
 - Native `<select>` needs explicit `background-color` and `color`.
-- Brand orange switches to `#FB923C` on dark (see `color-and-type.md`).
+- Brand orange `#F0952B` needs no change on dark (already 8.52:1 on ink); only the
+  text variant lightens (see `color-and-type.md`).
 
 ## Hydration (Next.js)
 - Inputs with `value` need `onChange`, or use `defaultValue`.
@@ -114,8 +115,9 @@ window, and legally-relevant state (attendance, payment, eligibility).
 - Long lists without virtualization
 - Inputs without labels; icon buttons without `aria-label`
 - Hardcoded date/number formats
-- Signal Orange `#EA580C` as normal-size text on white (3.56:1 — fails)
-- White text on Signal Orange (fails)
+- Brand Orange `#F0952B` as text on white (2.32:1 — fails badly)
+- **White text on orange** (2.32:1 — the most likely mistake in this project)
+- The full SAMACOSS crest used at favicon/header size instead of the simplified mark
 - Status conveyed by color alone
 - Any biometric/fingerprint/selfie UI — not part of this system
 - Raw GPS coordinates displayed to any user

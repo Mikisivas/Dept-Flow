@@ -13,7 +13,7 @@ Single session:   ▮▮ 1.0     ▮▯ 0.5     ▯▯ 0     ⌐⌐ provisional 
 Semester strip:   ▮▮ ▮▯ ▮▮ ▮▮ ▯▯ ▮▮ ▮▯ ▮▮ …
 ```
 
-- Filled cell = accepted checkpoint (Signal Orange `#EA580C`)
+- Filled cell = accepted checkpoint (Brand Orange `#F0952B`, the crest orange)
 - Hollow cell = missed checkpoint (1px `--line` outline)
 - Dashed cell = provisional, not yet counted
 - Single-checkpoint session (lecturer issued one token) renders as one wide cell, so

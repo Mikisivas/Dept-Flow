@@ -35,19 +35,22 @@ boldness here and keep everything around it quiet.
 
 Full tokens, CSS variables, and dark-mode values: `reference/color-and-type.md`.
 
+The palette is generated from the **SAMACOSS crest** (hue ≈32°) so the UI and the
+logo read as one system.
+
 | Token | Hex | Use |
 |---|---|---|
-| **Signal Orange** | `#EA580C` | Brand fills, the checkpoint motif, charts. **Black text only.** |
-| **Deep Orange** | `#C2410C` | Orange *text* on white, and primary buttons with white text. |
+| **Brand Orange** | `#F0952B` | Crest orange. Fills, the checkpoint motif, primary button. **Black text on it.** |
+| **Orange Text** | `#A75F0C` | The only orange safe as text on white. |
 | **Ink** | `#0A0A0A` | Primary text, dark surfaces. |
 | **White** | `#FFFFFF` | Primary surface. |
 | **Slate / Muted** | `#525252` / `#737373` | Secondary and tertiary text. |
 
-**The one rule that is easy to get wrong:** Signal Orange on white is **3.56:1** —
-it fails WCAG AA for normal text. Never set body text, labels, or small numbers in
-`#EA580C` on white, and never put white text on it. Use it as a *fill* with black
-text on it (5.56:1 ✓), or switch to Deep Orange `#C2410C` (5.18:1 ✓) when the orange
-must be text. Every ratio in this system is verified in `reference/color-and-type.md`.
+**The one rule that is easy to get wrong:** brand orange on white is **2.32:1** — a
+severe contrast failure. Never set text in `#F0952B` on white, and **never put white
+text on orange**. Orange is a *fill carrying black text* (8.52:1 ✓) — which is
+exactly how the crest sets "SAMACOSS". If orange must be text, it darkens to
+`#A75F0C` (4.90:1 ✓). Every ratio is verified in `reference/color-and-type.md`.
 
 **Orange is the brand, not a warning.** Because the departmental color is orange, it
 cannot also mean "caution" — a risk alert in orange would disappear into the brand
