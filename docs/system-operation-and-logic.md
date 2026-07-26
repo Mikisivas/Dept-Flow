@@ -6,6 +6,29 @@ form meant to translate directly into a database schema and API design. Where th
 thesis instructions and this document ever disagree, treat this document — and the
 actual running software — as the source of truth going forward.
 
+## 0. Technology stack
+
+| Layer | Choice | Role |
+|---|---|---|
+| Frontend | **Next.js / React (TypeScript)** | Mobile-first UI |
+| Styling | **Tailwind CSS** | Utility-first styling |
+| Components | **shadcn/ui** (Radix primitives) | Accessible component source, copied into the repo |
+| Backend API | **FastAPI (Python)** | Application and enforcement logic |
+| Database | **Supabase (PostgreSQL)** | Persistence, auth, realtime, row-level security |
+| Cache | **Redis** | Hot-path compliance lookups during checkpoint bursts |
+| Payments | **Paystack** | Card + Pay with Transfer, webhook-verified |
+| ML | **scikit-learn** | Advisory regression for the predictive engine |
+
+Tailwind, shadcn/ui, and Redis were added to the original five-part stack. Tailwind
+and shadcn sit inside the existing Next.js/React choice and replace nothing; shadcn's
+Radix primitives supply keyboard and ARIA behavior, which reduces hand-written
+accessibility code. Redis addresses the burst-concurrency pattern described in §13 —
+it keeps the compliance-status lookup off the database during token windows. Postgres
+alone is sufficient for a demonstration; Redis is what makes the 5,000-student
+scalability claim defensible.
+
+State versions for all of these in Chapter 3 (Research Instruments/Tools).
+
 ## 1. System purpose, in one sentence
 
 Dept-Flow gates a student's ability to accumulate *counted* attendance behind
