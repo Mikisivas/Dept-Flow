@@ -13,9 +13,14 @@ state.
 
 ## 1. Technology stack
 
+**Dept-Flow is a website, not an installed application.** Every role — student,
+lecturer, HOD, admin — reaches it through a mobile or desktop browser at a URL. There
+is no app store, no native build, no installation step. Design accordingly: the first
+visit must work immediately on a phone browser with nothing downloaded beforehand.
+
 | Layer | Choice | Notes |
 |---|---|---|
-| Frontend | **Next.js / React (TypeScript)** | Mobile-first; must load on Nigerian cellular data inside lecture halls |
+| Frontend | **Next.js / React (TypeScript)** | Responsive website, mobile-first; must load on Nigerian cellular data inside lecture halls |
 | Styling | **Tailwind CSS** | Utility-first; no separate CSS framework |
 | Components | **shadcn/ui** (Radix primitives) | Source copied into the repo, not a black-box dependency |
 | Backend API | **FastAPI (Python)** | |
@@ -42,7 +47,7 @@ that section is graded on reproducibility.
 
 ## 2. The design thesis
 
-Dept-Flow is an **institutional instrument**, not a consumer app. It decides whether
+Dept-Flow is an **institutional instrument**, not a consumer product. It decides whether
 a student sits an exam. It should read as precise, legible, and trustworthy —
 tabular, high-contrast, low-decoration. When in doubt, choose the version that looks
 like a well-made register rather than a startup landing page.
@@ -208,16 +213,21 @@ everywhere small.
 
 | Asset | Source | Where used |
 |---|---|---|
-| **Full crest** | supplied logo | login/landing, printed reports, About |
-| **App mark** | shield silhouette + monitor glyph only — **no ribbons, no banner text** | header, favicon, PWA icon, loading screen |
-| **Monochrome mark** | app mark, single-color | dark mode, watermarks, over orange |
+| **Full crest** | supplied logo | login/landing page, printed reports, About |
+| **Site mark** | shield silhouette + monitor glyph only — **no ribbons, no banner text** | site header, favicon, browser tab, bookmark icon |
+| **Monochrome mark** | site mark, single-color | dark mode, watermarks, over orange |
 
 Required files, all derived from the one crest:
-- `favicon.ico` — 32×32, app mark only
-- `icon-192.png`, `icon-512.png` — PWA/home-screen
-- `apple-touch-icon.png` — 180×180
-- `logo-full.svg` — the crest, login screen
-- `logo-mark.svg` — the simplified app mark
+- `favicon.ico` — 32×32, site mark only (browser tab)
+- `apple-touch-icon.png` — 180×180 (what iOS shows if a student bookmarks the site
+  to their home screen — worth having even though this is not an installed app)
+- `logo-full.svg` — the crest, for the login/landing page
+- `logo-mark.svg` — the simplified site mark, for the header
+- `og-image` — generated at build time from the logo and text, for link previews when
+  the URL is shared in a class WhatsApp group
+
+No `icon-192`/`icon-512` and no web manifest are needed — those exist to make a site
+installable, which is explicitly not the model here.
 
 **Get the source file.** The crest as supplied is a raster on an opaque white
 background; that white box will show against `--brand-tint` panels and break in dark
@@ -245,7 +255,7 @@ legibility on cheap Android screens outranks personality.
   mandatory anywhere numbers stack (attendance %, amounts, matric numbers, session
   counts) so columns align and digits don't jitter as values update.
 - **Display:** same family at 600/700 with tight tracking. If you want one
-  characterful accent face, confine it to the app wordmark — not headings.
+  characterful accent face, confine it to the site wordmark — not headings.
 
 Load one variable font subset with `font-display: swap` and preload it. Every extra
 font file is real money on a student's data bundle.
@@ -400,7 +410,7 @@ its consequence: "This session won't count toward anyone's total."
 Academic governance; individual students visible.
 - **Risk list** — students trending below 75%, sorted by severity, each row showing
   the CheckpointStrip so the pattern is legible at a glance
-- **Grace period control** — the highest-consequence control in the app. Show exactly
+- **Grace period control** — the highest-consequence control on the site. Show exactly
   who it affects and how many, require a reason, confirm before applying, state the
   expiry in plain language. Writes to the audit log.
 - **Waivers, disputes, final eligibility list** — the eligibility list is an
@@ -439,6 +449,15 @@ data, burst traffic in a 3–5 minute window, and legally-relevant state.
 **Slow and failing networks**
 - Every submission (token, payment, manual batch) survives a dropped connection:
   optimistic local state + retry, honest pending indicator.
+- **Know the limit of this on a website.** Without a service worker, a queued
+  submission only survives while the tab stays open — close the tab and it is gone.
+  So: retry aggressively while the page is open, persist the pending submission to
+  `localStorage` so a reload recovers it, and **never tell the student their
+  attendance is recorded until the server has acknowledged it**. An optimistic
+  "Recorded ✓" that silently fails is the worst possible outcome in this system,
+  because the student walks away believing they are counted. Show "Sending…" then a
+  confirmed state, and if it fails, say so loudly while they are still in the hall
+  and can retry or tell the lecturer.
 - Never leave a student ambiguous after payment — "Checking payment…" until the
   webhook lands.
 - Loading states end with `…` and say what is happening.
@@ -515,7 +534,7 @@ data, burst traffic in a 3–5 minute window, and legally-relevant state.
 
 ### Hydration (Next.js)
 - Inputs with `value` need `onChange`, or use `defaultValue`.
-- Guard date/time hydration mismatches — this app has a hard midnight boundary.
+- Guard date/time hydration mismatches — the site has a hard midnight boundary.
 - `suppressHydrationWarning` only where justified.
 
 ### Reject on sight

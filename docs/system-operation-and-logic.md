@@ -206,8 +206,17 @@ rows, never from the model's prediction.
 
 ## 12. Resilience — outage handling
 
+Dept-Flow is a **website accessed in a browser**, not an installed application, which
+bounds what "offline" can mean. Without a service worker there is no background sync:
+a queued submission survives only while the tab is open (and a page reload, if
+persisted to `localStorage`). Therefore the interface must **never confirm attendance
+before the server acknowledges it** — a student who sees "Recorded ✓" and walks away
+uncounted is the worst failure mode in the system.
+
 ```
-Brief network blip: client caches submission locally, retries on reconnect
+Brief network blip: client retries while the page is open; pending submission
+                    persisted to localStorage so a reload recovers it.
+                    UI shows "Sending…" — never "Recorded" — until acknowledged.
 Full outage: lecturer runs paper sign-in (two columns: Checkpoint 1, Checkpoint 2)
     → once online: lecturer submits ManualAttendanceBatch(session_instance, [(student, cp1, cp2)...], justification_note)
     → each row resolves through the SAME resolveSessionScore logic, tagged source=manually_entered
