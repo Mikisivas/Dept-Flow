@@ -22,17 +22,25 @@ visit must work immediately on a phone browser with nothing downloaded beforehan
 |---|---|---|
 | Frontend | **Next.js / React (TypeScript)** | Responsive website, mobile-first; must load on Nigerian cellular data inside lecture halls |
 | Styling | **Tailwind CSS** | Utility-first; no separate CSS framework |
-| Components | **shadcn/ui** (Radix primitives) | Source copied into the repo, not a black-box dependency |
+| Component primitives | **Radix UI** | Unstyled, accessible behavior — keyboard navigation, focus trapping, ARIA roles |
+| Component layer | **shadcn/ui** | Styled components built on Radix; source copied into the repo, not a black-box dependency |
 | Backend API | **FastAPI (Python)** | |
 | Database | **Supabase (PostgreSQL)** | Auth, realtime, row-level security |
 | Cache | **Redis** | Hot-path compliance check during checkpoint bursts |
 | Payments | **Paystack** | Card + Pay with Transfer, webhook-verified |
 | ML | **scikit-learn** | Advisory regression only |
 
-**Why Tailwind + shadcn:** shadcn ships Radix primitives, which supply keyboard
-navigation, focus trapping, and ARIA roles for free — most of the accessibility
-checklist in §9 is satisfied by using them instead of hand-rolled markup. Bundles
-stay small, which matters on metered data.
+**Why Tailwind:** utility-first styling keeps the shipped CSS proportional to what is
+actually used, which matters on metered cellular data, and it keeps the design tokens
+in §3 in one place rather than scattered across stylesheets.
+
+**Why Radix + shadcn:** Radix supplies the *behavior* of accessible components —
+keyboard navigation, focus trapping, ARIA roles, screen-reader semantics — already
+correct and tested. shadcn supplies the *styling* on top and copies the source into
+the repo so it can be edited freely. Together they satisfy most of the accessibility
+checklist in §9 by construction rather than by hand-written markup, which is the
+defensible justification: the alternative is re-implementing dialog focus management
+and menu keyboard behavior from scratch and getting it subtly wrong.
 
 **Why Redis:** the load pattern is bursty, not sustained — hundreds of students
 submitting inside the same 3–5 minute token window across parallel classes. Caching

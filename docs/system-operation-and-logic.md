@@ -11,21 +11,32 @@ actual running software — as the source of truth going forward.
 | Layer | Choice | Role |
 |---|---|---|
 | Frontend | **Next.js / React (TypeScript)** | Mobile-first UI |
-| Styling | **Tailwind CSS** | Utility-first styling |
-| Components | **shadcn/ui** (Radix primitives) | Accessible component source, copied into the repo |
+| Styling | **Tailwind CSS** | Utility-first styling; ships only the CSS actually used |
+| Component primitives | **Radix UI** | Unstyled accessible behavior — keyboard navigation, focus trapping, ARIA |
+| Component layer | **shadcn/ui** | Styled components built on Radix, source copied into the repo |
 | Backend API | **FastAPI (Python)** | Application and enforcement logic |
 | Database | **Supabase (PostgreSQL)** | Persistence, auth, realtime, row-level security |
 | Cache | **Redis** | Hot-path compliance lookups during checkpoint bursts |
 | Payments | **Paystack** | Card + Pay with Transfer, webhook-verified |
 | ML | **scikit-learn** | Advisory regression for the predictive engine |
 
-Tailwind, shadcn/ui, and Redis were added to the original five-part stack. Tailwind
-and shadcn sit inside the existing Next.js/React choice and replace nothing; shadcn's
-Radix primitives supply keyboard and ARIA behavior, which reduces hand-written
-accessibility code. Redis addresses the burst-concurrency pattern described in §13 —
-it keeps the compliance-status lookup off the database during token windows. Postgres
-alone is sufficient for a demonstration; Redis is what makes the 5,000-student
-scalability claim defensible.
+**Tailwind CSS, Radix UI, shadcn/ui, and Redis** were added to the original five-part
+stack. The first three sit inside the existing Next.js/React choice and replace
+nothing:
+
+- **Tailwind** keeps shipped CSS proportional to what is used — relevant on metered
+  cellular data — and centralises the design tokens.
+- **Radix UI** provides the accessibility *behavior* of interactive components
+  (keyboard navigation, focus trapping, ARIA roles, screen-reader semantics) already
+  correct. The alternative is re-implementing dialog focus management and menu
+  keyboard handling by hand and getting it subtly wrong.
+- **shadcn/ui** provides the styling layer on top of Radix and copies component source
+  into the repository, so components are owned and editable rather than being an
+  opaque dependency.
+- **Redis** addresses the burst-concurrency pattern in §13 — it keeps the
+  compliance-status lookup off the database during token windows. Postgres alone is
+  sufficient for a demonstration; Redis is what makes the 5,000-student scalability
+  claim defensible.
 
 State versions for all of these in Chapter 3 (Research Instruments/Tools).
 
